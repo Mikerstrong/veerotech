@@ -1,10 +1,19 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/rqfjfunr/public_html/weather
-    # Optional: Clear old files in /weather first (uncomment if you want a clean deploy each time; be careful!)
-    # - /bin/rm -rf $DEPLOYPATH/*
-    # Copy the built Vue files (from dist/ in your repo) to the /weather folder
-    - /bin/cp -r dist/. $DEPLOYPATH/
-    # Cleaner alternative with rsync (recommended if rsync is available on VeeroTech—most cPanel hosts have it)
-    # - rsync -av --delete dist/ $DEPLOYPATH/
+    # Set production mode (good practice)
+    - export NODE_ENV=production
+    
+    # Install dependencies — adjust npm path if needed (see notes below)
+    - npm install --production
+    
+    # Build the Vue app (creates /dist folder)
+    - npm run build
+    
+    # Copy the built files to your target folder
+    # Use -r for recursive, . to copy contents (not the dist folder itself)
+    - /bin/cp -r dist/. /home/rqfjfunr/public_html/weather/
+    
+    # Optional: Clean up old files first if you want a fresh deploy every time
+    # - /bin/rm -rf /home/rqfjfunr/public_html/weather/*
+    # Then copy again (but test without rm first!)
