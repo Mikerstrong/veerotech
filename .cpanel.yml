@@ -1,19 +1,23 @@
 ---
 deployment:
   tasks:
-    # Set production mode (good practice)
+    # Set environment for production build
     - export NODE_ENV=production
-    
-    # Install dependencies — adjust npm path if needed (see notes below)
-    - npm install --production
-    
-    # Build the Vue app (creates /dist folder)
-    - npm run build
-    
-    # Copy the built files to your target folder
-    # Use -r for recursive, . to copy contents (not the dist folder itself)
-    - /bin/cp -r dist/. /home/rqfjfunr/public_html/weather/
-    
-    # Optional: Clean up old files first if you want a fresh deploy every time
-    # - /bin/rm -rf /home/rqfjfunr/public_html/weather/*
-    # Then copy again (but test without rm first!)
+
+    # Log start (helps debug in File Manager)
+    - echo "Deployment started at $(date)" > /home/rqfjfunr/public_html/weather/deploy-log.txt
+
+    # Install deps – try common cPanel Node 18 path; change to ea-nodejs20 or ea-nodejs16 if needed
+    - /opt/cpanel/ea-nodejs18/bin/npm ci --production >> /home/rqfjfunr/public_html/weather/deploy-log.txt 2>&1 || echo "npm install skipped or failed" >> /home/rqfjfunr/public_html/weather/deploy-log.txt
+
+    # Build the Vue/Vite app (outputs to dist/)
+    - /opt/cpanel/ea-nodejs18/bin/npm run build >> /home/rqfjfunr/public_html/weather/deploy-log.txt 2>&1 || echo "Build failed – check log" >> /home/rqfjfunr/public_html/weather/deploy-log.txt
+
+    # Optional: Clear old files first (uncomment if you want clean deploys; careful on shared hosting!)
+    # - /bin/rm -rf /home/rqfjfunr/public_html/weather/* >> /home/rqfjfunr/public_html/weather/deploy-log.txt 2>&1
+
+    # Copy built files (contents of dist/) to weather subfolder
+    - /bin/cp -r dist/. /home/rqfjfunr/public_html/weather/ >> /home/rqfjfunr/public_html/weather/deploy-log.txt 2>&1 || echo "Copy failed" >> /home/rqfjfunr/public_html/weather/deploy-log.txt
+
+    # Log completion
+    - echo "Deployment finished at $(date)" >> /home/rqfjfunr/public_html/weather/deploy-log.txt
