@@ -1,8 +1,14 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /weather/   # IMPORTANT: match your subfolder!
+  RewriteBase /weather/          # <-- This is CRITICAL for subfolder!
+
+  # If the requested resource is index.html, serve it directly
   RewriteRule ^index\.html$ - [L]
+
+  # If the file or directory doesn't exist, rewrite to index.html
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Redirect everything else to index.html (with the subfolder base)
   RewriteRule . index.html [L]
 </IfModule>
