@@ -1,11 +1,10 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/rqfjfunr/public_html
-    # Optional: Clear old files first (careful—back up public_html if needed!)
+    - export DEPLOYPATH=/home/rqfjfunr/public_html/weather
+    # Optional: Clear old files in /weather first (uncomment if you want a clean deploy each time; be careful!)
     # - /bin/rm -rf $DEPLOYPATH/*
-    # - /bin/rm -rf $DEPLOYPATH/.*  # removes hidden files too, if you want a clean slate
-    # Copy everything from the repo's dist/ folder to public_html
+    # Copy the built Vue files (from dist/ in your repo) to the /weather folder
     - /bin/cp -r dist/. $DEPLOYPATH/
-    # Alternative with rsync (better for syncing/deletes; most cPanel hosts have rsync)
+    # Cleaner alternative with rsync (recommended if rsync is available on VeeroTech—most cPanel hosts have it)
     # - rsync -av --delete dist/ $DEPLOYPATH/
