@@ -1,5 +1,11 @@
 ---
 deployment:
   tasks:
-    - export DEPLOY_PATH=/home/yourusername/public_html   # Change 'yourusername' to your actual cPanel username
-    - /bin/cp -r . $DEPLOY_PATH                            # Copies everything from repo to public_html
+    - export DEPLOYPATH=/home/rqfjfunr/public_html
+    # Optional: Clear old files first (careful—back up public_html if needed!)
+    # - /bin/rm -rf $DEPLOYPATH/*
+    # - /bin/rm -rf $DEPLOYPATH/.*  # removes hidden files too, if you want a clean slate
+    # Copy everything from the repo's dist/ folder to public_html
+    - /bin/cp -r dist/. $DEPLOYPATH/
+    # Alternative with rsync (better for syncing/deletes; most cPanel hosts have rsync)
+    # - rsync -av --delete dist/ $DEPLOYPATH/
