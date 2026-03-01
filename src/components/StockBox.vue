@@ -7,21 +7,23 @@ const loading = ref(false)
 const error = ref('')
 
 async function fetchStock() {
-  loading.value = true
-  error.value = ''
-  price.value = null
+  loading.value = true;
+  error.value = '';
+  price.value = null;
   try {
-    // Example using Finnhub free endpoint (replace 'YOUR_API_KEY' with your own key)
-    const apiKey = 'YOUR_API_KEY'
-    const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
-    const res = await fetch(url)
-    if (!res.ok) throw new Error('API error or symbol not found')
-    const data = await res.json()
-    price.value = data.c // 'c' is current price
+    // Yahoo Finance unofficial public endpoint
+    const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + symbol)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('API error or symbol not found');
+    const proxyData = await res.json();
+    const data = JSON.parse(proxyData.contents);
+    const quote = data.quoteResponse.result[0];
+    if (!quote || !quote.regularMarketPrice) throw new Error('Symbol not found or no price available');
+    price.value = quote.regularMarketPrice;
   } catch (e) {
-    error.value = e.message
+    error.value = e.message;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
