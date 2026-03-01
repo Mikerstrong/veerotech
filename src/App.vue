@@ -1,10 +1,11 @@
 
+
 <script setup>
-import WeatherBox from './components/WeatherBox.vue'
+import StockBox from './components/StockBox.vue'
 </script>
 
 <template>
-  <WeatherBox />
+  <StockBox />
 </template>
 
 <style scoped>
